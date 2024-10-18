@@ -130,7 +130,7 @@ const FloatingToolbar = () => {
             handleFormat("color", color);
           }}
         />
-        <EmojiPicker onChange={(emoji) => handleFormat("emoji", emoji)} />
+        <EmojiPicker onChange={(emoji: string | boolean) => handleFormat("emoji", emoji)} />
 
         {/* <ColorSelector onChange={handleBackgroundChange} value={theme.background} /> */}
         <Button onClick={() => handleFormat("align", "")} size="icon" variant="ghost" className="text-base size-8">

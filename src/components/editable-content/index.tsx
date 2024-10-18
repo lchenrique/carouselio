@@ -37,6 +37,7 @@ const EditableContent = ({ value, index, parentIndex }: { value: TextContent; in
   const contentId = `slides.${parentIndex}.content.${index}`;
   const { field: item } = useController({ name: contentId });
 
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const savedSelectionRef = useRef<any>(null);
   const previousThemeRef = useRef<string[]>([]);
   const secondaryThemeRef = useRef("");
@@ -161,6 +162,7 @@ const EditableContent = ({ value, index, parentIndex }: { value: TextContent; in
   //   };
   // }, [quill, setSelectionFormat, toggleToolbar, index, setActiveContent]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (quill) {
       quill.on("selection-change", (range) => {
@@ -176,20 +178,9 @@ const EditableContent = ({ value, index, parentIndex }: { value: TextContent; in
         }
       });
 
-      const handleClickOutside = (e) => {
-        // if (quillRef.current && !quillRef.current.contains(e.target)) {
-        //   if (savedSelectionRef.current) {
-        //     setTimeout(() => {
-        //       quill.setSelection(savedSelectionRef.current);
-        //     }, 0);
-        //   }
-        // }
-      };
-
-      document.addEventListener("click", handleClickOutside);
-
       return () => {
-        document.removeEventListener("click", handleClickOutside);
+        quill.off("selection-change");
+        toggleToolbar(false);
       };
     }
   }, [quill, quillRef, setSelectionFormat, toggleToolbar, contentId, setActiveContent]);
@@ -253,6 +244,7 @@ const EditableContent = ({ value, index, parentIndex }: { value: TextContent; in
   }, [quill, theme, item.value.attrs.color, item.value.type]);
 
   return (
+    // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
     <div
       className="w-full "
       onClick={() => {

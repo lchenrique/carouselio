@@ -22,7 +22,8 @@ const SwiperCarousel = ({
   size,
   control,
   ...props
-}: SwiperProps & { size: any; control: Control<{ slide: ISlideItems[] }> }) => {
+}: // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+SwiperProps & { size: any; control: Control<{ slide: ISlideItems[] }> }) => {
   const [sizeSc, scaleSc] = useState(size);
   const [swipe, setSwipe] = useState(true);
   const [pan, setPan] = useState(false);
