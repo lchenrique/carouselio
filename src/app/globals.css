@@ -1,27 +1,174 @@
+@import "./_style/fonts.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --primary: 242 100% 68%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 92.99% 56.11%;
+    --destructive-foreground: 210 40% 98%;
+    --ring: 220.67 97.83% 36.08%;
+    --radius: 0.5rem;
+
+    --primary-rgb: 153, 153, 255;
+
+    --muted-foreground-rgb: 100, 116, 139;
+  }
+
+  .dark {
+    --background: 240 13.73% 10%;
+    --foreground: 229.76 31.78% 74.71%;
+    --muted: 232.5 15.44% 18.32%;
+    --muted-foreground: 233.79 11.37% 50%;
+    --popover: 234.55 17.46% 12.35%;
+    --popover-foreground: 234 12.4% 52.55%;
+    --card: 234.55 17.46% 12.35%;
+    --card-foreground: 229.76 31.78% 74.71%;
+    --border: 232.5 15.38% 30.59%;
+    --input: 232 20% 14.71%;
+    --primary: 225.45 71.22% 72.75%;
+    --primary-foreground: 234.55 17.46% 12.35%;
+    --secondary: 225.45 8.83% 84.64%;
+    --secondary-foreground: 234.55 17.46% 12.35%;
+    --accent: 234.55 17.83% 9.47%;
+    --accent-foreground: 0 0% 82.75%;
+    --destructive: 1.58 47.5% 52.94%;
+    --destructive-foreground: 210 40% 98.04%;
+    --ring: 225.45 71.22% 72.75%;
+  }
+}
+
+.disable-click {
+  pointer-events: none;
+  cursor: default;
+}
+
+@layer base {
+  htm,
+  body {
+    @apply bg-[#F2F2F7] text-foreground;
+  }
+}
+/* .slick-list {
+	@apply h-full  flex items-center p-0    !important;
+}
+.slick-slider {
+	height: 100%;
+	@apply pb-16 !important;
+}
+.slick-track {
+	@apply flex items-center  gap-3 !important;
+}
+.slick-dots {
+	@apply bottom-0 !important;
+} */
+
+.title > * {
+  font-size: 2.75rem;
+  line-height: 1.4;
+}
+
+.sub > * {
+  font-size: 1.75rem;
+  line-height: 1.3;
+}
+.ql-font-Geist {
+  font-family: "Geist";
+}
+
+/* Themes */
+.bolinha {
+  background-image: radial-gradient(circle, #a5a5a55b 10%, transparent 10.5%);
+  background-size: 20px 20px; /* Tamanho das bolinhas e espaçamento */
+}
+
+.cosmic {
+  background-image: radial-gradient(circle at 20% 20%, #4b0082 0%, #000080 50%, #000000 100%);
+  background-size: cover;
+}
+
+.pulses {
+  background: conic-gradient(at 10% 50%, #0000 75%, #47142e38 0),
+    conic-gradient(at 10% 50%, #0000 75%, #47142e38 0) calc(1 * 14px) calc(3 * 14px),
+    conic-gradient(at 10% 50%, #0000 75%, #47142e38 0) calc(2 * 14px) calc(1 * 14px),
+    conic-gradient(at 10% 50%, #0000 75%, #47142e38 0) calc(3 * 14px) calc(4 * 14px),
+    conic-gradient(at 10% 50%, #0000 75%, #47142e38 0) calc(4 * 14px) calc(2 * 14px),
+    conic-gradient(at 50% 10%, #0000 75%, #47142e38 0) 0 calc(4 * 14px),
+    conic-gradient(at 50% 10%, #0000 75%, #47142e38 0) calc(1 * 14px) calc(2 * 14px),
+    conic-gradient(at 50% 10%, #0000 75%, #47142e38 0) calc(2 * 14px) 0,
+    conic-gradient(at 50% 10%, #0000 75%, #47142e38 0) calc(3 * 14px) calc(3 * 14px),
+    conic-gradient(at 50% 10%, #0000 75%, #47142e38 0) calc(4 * 14px) calc(1 * 14px), transparent;
+  background-size: 70px 70px;
+}
+
+.nested {
+  background: repeating-linear-gradient(
+      45deg,
+      #0000 calc(-650% / 13) calc(50% / 13),
+      #474aff2f 0 calc(100% / 13),
+      #0000 0 calc(150% / 13),
+      #474aff2f 0 calc(200% / 13),
+      #0000 0 calc(250% / 13),
+      #474aff2f 0 calc(300% / 13)
+    ),
+    repeating-linear-gradient(
+        45deg,
+        #0000 calc(-650% / 13) calc(50% / 13),
+        #474aff2f 0 calc(100% / 13),
+        #0000 0 calc(150% / 13),
+        #474aff2f 0 calc(200% / 13),
+        #0000 0 calc(250% / 13),
+        #474aff2f 0 calc(300% / 13)
+      )
+      33px 33px,
+    repeating-linear-gradient(
+      -45deg,
+      #0000 calc(-650% / 13) calc(50% / 13),
+      #474aff2f 0 calc(100% / 13),
+      #0000 0 calc(150% / 13),
+      #474aff2f 0 calc(200% / 13),
+      #0000 0 calc(250% / 13),
+      #474aff2f 0 calc(300% / 13)
+    ),
+    repeating-linear-gradient(
+        -45deg,
+        #0000 calc(-650% / 13) calc(50% / 13),
+        #474aff2f 0 calc(100% / 13),
+        #0000 0 calc(150% / 13),
+        #474aff2f 0 calc(200% / 13),
+        #0000 0 calc(250% / 13),
+        #474aff2f 0 calc(300% / 13)
+      )
+      33px 33px transparent;
+  background-size: 66px 66px;
+}
+
+.transtion-gradient {
+  -webkit-transition: background 1s ease-out;
+  -moz-transition: background 1s ease-out;
+  -o-transition: background 1s ease-out;
+  transition: background 1s ease-out;
 }

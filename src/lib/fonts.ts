@@ -1,0 +1,16 @@
+export const fonts = [
+  "Roboto",
+  "OpenSans",
+  "Poppins",
+  "Inter",
+  "Merriweather",
+  "Playfair",
+  "Lora",
+  "CourierPrime",
+  "IBMPlexMono",
+  "BebasNeue",
+  "Raleway",
+  "Montserrat",
+  "Pacifico",
+  "AmaticSC",
+];

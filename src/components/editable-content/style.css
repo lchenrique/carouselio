@@ -1,0 +1,40 @@
+.floating-toolbar {
+	position: absolute;
+	background-color: #fff;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	padding: 5px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	z-index: 10;
+	display: flex;
+	gap: 100px;
+}
+
+.floating-toolbar button {
+	background: none;
+	border: none;
+	cursor: pointer;
+	font-size: 4rem;
+}
+
+.ql-container {
+	border: none;
+	@apply w-full;
+}
+
+.ql-container.ql-snow {
+	@apply border-none;
+}
+
+.ql-editor {
+	@apply p-0 pr-3 overflow-visible;
+}
+
+::-moz-selection {
+	/* Code for Firefox */
+	background: rgba(255, 255, 255, 0.079);
+}
+
+::selection {
+	background: rgba(255, 255, 255, 0.437);
+}

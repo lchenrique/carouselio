@@ -1,0 +1,62 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700&family=Open+Sans:wght@400;700&family=Poppins:wght@400;700&family=Inter:wght@400;700&family=Merriweather:wght@400;700&family=Playfair+Display:wght@400;700&family=Lora:wght@400;700&family=Courier+Prime:wght@400;700&family=IBM+Plex+Mono:wght@400;700&family=Bebas+Neue&family=Raleway:wght@400;700&family=Montserrat:wght@400;700&family=Pacifico&family=Amatic+SC:wght@400;700&display=swap");
+
+.ql-font-Roboto {
+	font-family: "Roboto", sans-serif;
+}
+
+.ql-font-OpenSans {
+	font-family: "Open Sans", sans-serif;
+}
+
+.ql-font-Poppins {
+	font-family: "Poppins", sans-serif;
+}
+
+.ql-font-Inter {
+	font-family: "Inter", sans-serif;
+}
+
+.ql-font-Merriweather {
+	font-family: "Merriweather", serif;
+}
+
+.ql-font-Playfair {
+	font-family: "Playfair Display", serif;
+}
+
+.ql-font-Lora {
+	font-family: "Lora", serif;
+}
+
+.ql-font-CourierPrime {
+	font-family: "Courier Prime", monospace;
+}
+
+.ql-font-IBMPlexMono {
+	font-family: "IBM Plex Mono", monospace;
+}
+
+.ql-font-BebasNeue {
+	font-family: "Bebas Neue", sans-serif;
+}
+
+.ql-font-Raleway {
+	font-family: "Raleway", sans-serif;
+}
+
+.ql-font-Montserrat {
+	font-family: "Montserrat", sans-serif;
+}
+
+.ql-font-Pacifico {
+	font-family: "Pacifico", cursive;
+}
+
+.ql-font-AmaticSC {
+	font-family: "Amatic SC", cursive;
+}
+
+.ql-size .ql-picker-label[data-label]::before,
+.ql-size .ql-picker-item[data-label]::before {
+	content: attr(data-label) !important;
+}
