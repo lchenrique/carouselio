@@ -24,7 +24,6 @@ function DragableItem({ item, index, parentIndex }: { item: TextContent; index: 
       transition: `all ${curve} ${duration + 1}s`,
     };
   }
-
   return (
     <>
       <Draggable draggableId={String(item.id)} index={index}>
@@ -42,7 +41,7 @@ function DragableItem({ item, index, parentIndex }: { item: TextContent; index: 
               }}
             >
               <GripVertical className="size-5 invisible group-hover:visible text-muted" />
-              <EditableContent parentIndex={parentIndex} index={index} value={item} />
+              <EditableContent parentIndex={parentIndex} index={index}  />
             </div>
           </>
         )}

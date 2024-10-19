@@ -13,7 +13,11 @@ export enum TextContentHeadingType {
 
 export interface TextContent {
   id: string;
-  type: TextContentHeadingType;
+  values: ContentValues[];
+}
+
+
+export interface ContentValues {
   attrs?: {
     bold?: boolean;
     italic?: boolean;
@@ -24,6 +28,7 @@ export interface TextContent {
   };
   value: string;
 }
+
 
 export const getDefaultColor = (type: TextContentHeadingType): keyof Theme => {
   switch (type) {

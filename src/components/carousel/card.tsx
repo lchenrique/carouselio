@@ -26,16 +26,9 @@ function CardContent({ index, item, size, onMouseEnter, onMouseLeave, scale, cla
 
   return (
     <>
-      <KeepScale>
-        {/* <ColorSelector
-          onChange={(bg) => {
-            setBg(bg);
-          }}
-          value={theme.background}
-        /> */}
-      </KeepScale>
 
       <Card
+      
         key={String(index)}
         className={cn("p-4 relative border-0  transition-all duration-700 ", className)}
         style={{
@@ -43,16 +36,16 @@ function CardContent({ index, item, size, onMouseEnter, onMouseLeave, scale, cla
           width: size.w,
           height: size.h,
           minWidth: size.w,
+          
         }}
+      
       >
         <div
           className={cn("h-full w-full absolute left-0 top-0 opacity-45 transition-all duration-700", theme.pattern)}
         />
         <div className="relative h-full  w-full flex items-center justify-center">
           <div className="bg-white/0  rounded-xl h-full  w-full">
-            <div onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-              <SlideContent scale={scale} values={item.content} index={index} />
-            </div>
+              <SlideContent scale={scale} values={item.contentItems} index={index} />
           </div>
         </div>
       </Card>

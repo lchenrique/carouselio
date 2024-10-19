@@ -1,4 +1,5 @@
 "use client";
+import { BoradTool } from "@/components/board-tool";
 import SlideContent from "@/components/carousel/content";
 import { FloatingToolbar } from "@/components/floting-toolbar";
 import { ToolbarProvider } from "@/components/providers/toolbar-provider";
@@ -9,6 +10,7 @@ import { ColorThemePallette } from "@/components/theme/color-theme-pallette";
 import { TypographyH2 } from "@/components/typography/h2";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { pallettes } from "@/lib/pallettes";
 import { cn } from "@/lib/utils";
 import { useSideBarControl } from "@/store/side-bar-control";
@@ -56,7 +58,7 @@ export default function CrouselToolPage() {
   const { toggleToolbar } = useToolbarControl();
   const [size, setSize] = useState({ w: 486, h: 486 });
   const { theme } = useSlideThemeStore();
-  const { open } = useSideBarControl();
+  const {  isMobile , open } = useSidebar();
 
   const ref = useClickAway<HTMLDivElement>(() => {
     toggleToolbar(false);
@@ -64,55 +66,73 @@ export default function CrouselToolPage() {
     // quill?.setSelection(0, 0, "silent");
   });
 
-  const methods = useForm<{ slide: ISlideItems[] }>({
+  const methods = useForm<{ slides: ISlideItems[] }>({
     defaultValues: {
-      slide: [
+      slides: [
         {
           id: "1",
-          content: [
+          contentItems: [
             {
               id: "1",
-              type: TextContentHeadingType.Heading1,
-              attrs: {
-                color: theme[getDefaultColor(TextContentHeadingType.Heading1) as keyof typeof theme],
-                size: TextContentHeadingType.Heading1,
-              },
-              value: "Hello, this is a text slide 1!",
+              values: [
+                {
+                  attrs: {
+                    color: theme[getDefaultColor(TextContentHeadingType.Heading1) as keyof typeof theme],
+                    size: TextContentHeadingType.Heading1,
+                    font:"Poppins",
+                  },
+                  value: "Hello, this is a text slide 1!",
+                },
+              ],
             },
             {
               id: "2",
-              type: TextContentHeadingType.Heading4,
-              attrs: {
-                color: theme[getDefaultColor(TextContentHeadingType.Heading4) as keyof typeof theme],
-                size: TextContentHeadingType.Heading4,
-              },
-              value: "Hello, this is a text slide 1!",
+              values: [
+                {
+                  attrs: {
+                    color: theme[getDefaultColor(TextContentHeadingType.Heading4) as keyof typeof theme],
+                    size: TextContentHeadingType.Heading4,
+                    font:"Poppins", 
+                  },
+                  value: "Hello, this is a text slide 1!",
+                  
+                },
+              ],
             },
           ],
         },
         {
           id: "2",
-          content: [
+          contentItems: [
             {
               id: "1",
-              type: TextContentHeadingType.Heading1,
-              attrs: {
-                color: theme[getDefaultColor(TextContentHeadingType.Heading1) as keyof typeof theme],
-                size: TextContentHeadingType.Heading1,
-              },
-              value: "Hello, this is a text slide 1!",
+              values: [
+                {
+                  attrs: {
+                    color: theme[getDefaultColor(TextContentHeadingType.Heading1) as keyof typeof theme],
+                    size: TextContentHeadingType.Heading1,
+                    font:"Poppins", 
+                  },
+                  value: "Hello, this is a text slide 1!",
+                },
+              ],
             },
             {
               id: "2",
-              type: TextContentHeadingType.Heading4,
-              attrs: {
-                color: theme[getDefaultColor(TextContentHeadingType.Heading4) as keyof typeof theme],
-                size: TextContentHeadingType.Heading4,
-              },
-              value: "Hello, this is a text slide 1!",
+              values: [
+                {
+                  attrs: {
+                    color: theme[getDefaultColor(TextContentHeadingType.Heading4) as keyof typeof theme],
+                    size: TextContentHeadingType.Heading4,
+                    font:"Poppins", 
+                  },
+                  value: "Hello, this is a text slide 1!",
+                },
+              ],
             },
           ],
         },
+      
       ],
     },
   });
@@ -122,35 +142,36 @@ export default function CrouselToolPage() {
     setSize({ w: Number.parseInt(width), h: Number.parseInt(height) });
   };
 
+  console.log(methods.watch("slides"), "watch");
+
   return (
-    <div className="h-screen bg-transparent w-full">
+    <div className="h-screen bg-transparent w-full relative">
+      <header className={cn("bg-gradient-to-tr from-primary to-purple-500", {
+        "rounded-t-lg": !isMobile,
+      })}>
+        <div className="flex items-center w-full  [&>*]:border-white/10 ">
+          <div className="flex items-center gap-2 px-4">
+            <SidebarTrigger className="-ml-1" />
+          </div>
+          <div className="pr-12">
+            <h1 className="bg-transparent text-2xl font-bold text-white p-1 h-min">Board</h1>
+          </div>
+          <div className="px-1 ">
+            <Button className="bg-transparent p-1 h-min hover:bg-transparent">Aquivo</Button>
+          </div>
+          <div className="px-1">
+            <Button className="bg-transparent  p-1 h-min hover:bg-transparent">Redimensionar</Button>
+          </div>
+        </div>
+      </header>
       <div
         className="flex mx-auto"
         style={{
           height: "calc(100vh - 60px)",
         }}
       >
-        <div className="h-full flex  py-3 absolute z-10">
-          <div className="flex flex-col gap-1 p-2  my-auto">
-            <Button size="icon" variant="ghost">
-              <Sparkles />
-            </Button>
-            <Button size="icon" variant="ghost">
-              <CaseSensitive />
-            </Button>
-            <Button size="icon" variant="ghost">
-              <SwatchBook />
-            </Button>
-            <Button size="icon" variant="ghost">
-              <PanelsTopLeft />
-            </Button>
-            <Button size="icon" variant="ghost">
-              <Grid3X3 />
-            </Button>
-            <Button size="icon" variant="ghost">
-              <ArrowRight />
-            </Button>
-          </div>
+        <div className="h-full flex  py-3 absolute left-4  z-10">
+          <BoradTool />
         </div>
 
         {/* <div className="h-full relative  ">
@@ -162,25 +183,24 @@ export default function CrouselToolPage() {
 
         <div
           ref={ref}
-          className="flex w-full flex-col gap-1 overflow-hidden  pl-0"
+          className="flex w-full flex-col gap-1 overflow-hidden absolute h-[calc(100%-40px)]  pl-0"
           style={{
-            width: open ? "calc(100vw - 260px)" : "calc(100vw - 0px)",
+            width: isMobile? '100vw' : open ? "calc(100vw - 260px)" : "calc(100vw - 0px)",
           }}
         >
           <FormProvider {...methods}>
             <header
-              className={cn("flex items-center w-full  pr-12 ml-auto relative  justify-between p-2 ", {
+              className={cn("flex items-center w-full  pr-12 ml-auto absolute z-40 justify-between p-2 ", {
                 "pl-24": !open,
               })}
             >
-              <span className="text-2xl font-semibold">Board</span>
               <FloatingToolbar />
               <div className="flex items-center gap-3 justify-end  w-48">
-                <Select options={optionsSize} value="Tesete" onChange={handleSizeChange} />
+                <Select options={optionsSize} value={`${size.w}x${size.h}`} onChange={handleSizeChange} />
               </div>
             </header>
             <div className="swiper  w-min">
-              <SwiperCarousel size={size} control={methods.control} />
+              <SwiperCarousel size={size}  />
             </div>
           </FormProvider>
         </div>

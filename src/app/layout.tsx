@@ -2,7 +2,22 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { ToolbarProvider } from "@/components/providers/toolbar-provider";
-import Sidebar from "@/components/layout/sidebar";
+import { AppSidebar } from "@/components/app-sidebar"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
+import { Separator } from "@/components/ui/separator"
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar"
+
 
 const geistSans = localFont({
   src: "./_fonts/GeistVF.woff",
@@ -28,12 +43,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-hidden`}>
-        <div className="flex ">
-          <div className="">
-            <Sidebar />
-          </div>
-          <div className="flex-1">{children}</div>
+      <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
+        <div className="flex flex-1 flex-col overflow-hidden  pt-0">
+         {children}
         </div>
+      </SidebarInset>
+    </SidebarProvider>
       </body>
     </html>
   );

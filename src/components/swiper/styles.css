@@ -2,7 +2,7 @@
 	@apply min-[1080px]:w-min  min-[1080px]:overflow-visible !important;
 }
 
-.swiper-slide {
+.swiper-slide.have-more {
 	@apply min-[1080px]:w-min !important;
 	/* Center slide text vertically */
 }

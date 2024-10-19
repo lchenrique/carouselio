@@ -7,18 +7,19 @@ import { cn } from "@/lib/utils";
 import { useSlideThemeStore } from "@/store/slide-theme-store";
 import { Baseline, Bold, Brush, Italic, Underline } from "lucide-react";
 import { useClickAway } from "@uidotdev/usehooks";
-import type { AttributeMap } from "quill/core";
+import type { AttributeMap, Delta } from "quill/core";
 import { useSlideControl } from "@/store/slide-control";
 import type Quill from "quill/core";
 import { Button } from "../ui/button";
 import { useQuill } from "react-quilljs";
 import { FloatingToolbar } from "../floting-toolbar";
-import { useController } from "react-hook-form";
+import { useController, useFormContext } from "react-hook-form";
 import { fonts } from "@/lib/fonts";
 import { AvailableFontSizeValues } from "@/lib/font-sizes";
 import type { ISlideItems } from "@/types/slide-content";
-import { TextContentHeadingType, type TextContent } from "@/types/text-content";
+import { TextContentHeadingType, type ContentValues, type TextContent } from "@/types/text-content";
 import { useToolbarControl, type SelectionFormat } from "@/store/toolbar-control";
+import { convertDeltaOpsToTextContent } from "@/lib/convert-delta-ops-to-text-content";
 
 interface Position {
   x: number;
@@ -30,12 +31,20 @@ interface SelectionPosition {
   absolute: Position;
 }
 
-const EditableContent = ({ value, index, parentIndex }: { value: TextContent; index: number; parentIndex: number }) => {
+const EditableContent = ({
+  index,
+  parentIndex,
+}: {
+  index: number;
+  parentIndex: number;
+}) => {
   const { theme } = useSlideThemeStore();
   const { selectionFormat, toChange, setSelectionFormat, toggleToolbar, setActiveContent, activeContent } =
     useToolbarControl();
-  const contentId = `slides.${parentIndex}.content.${index}`;
-  const { field: item } = useController({ name: contentId });
+    
+  const {control} = useFormContext()
+  const contentId = `slides.${parentIndex}.contentItems.${index}.values`;
+  const { field: item } = useController({ name: contentId, control });
 
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const savedSelectionRef = useRef<any>(null);
@@ -85,25 +94,24 @@ const EditableContent = ({ value, index, parentIndex }: { value: TextContent; in
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const savedContent = {
-      ops: [
-        {
-          insert: item.value.value,
-          attributes: {
-            size: item.value.attrs.size,
-            color: item.value.attrs.color,
-            font: item.value.attrs?.font || "Poppins",
-            align: item.value.attrs?.align,
-          },
-        },
-      ],
+      ops: item.value ? [
+        ...item.value.map((v : ContentValues) => {
+          return {
+            insert: v.value,
+            attributes: {
+             ...v.attrs
+            },
+          };
+        }),
+      ] : [],
     };
     previousThemeRef.current = [theme.secondary, theme.primary];
     secondaryThemeRef.current = theme.secondary;
-    if (quill && savedContent) {
+    if (quill && savedContent.ops.length > 0) {
       const delta = quill.setContents(savedContent.ops);
       quill.setContents(delta);
     }
-  }, [quill, item.value]);
+  }, [quill, theme.secondary, theme.primary]);
 
   const addSelectionFormat = useCallback(
     (format: SelectionFormat[string]) => {
@@ -142,26 +150,6 @@ const EditableContent = ({ value, index, parentIndex }: { value: TextContent; in
     }
   }, [quill, selectionFormat, contentId, addSelectionFormat, toChange]);
 
-  // useEffect(() => {
-  //   if (!quill) return;
-  //   quill.on("selection-change", (range) => {
-  //     if (range) {
-  //       setActiveContent(contentId);
-  //       const selectedText = quill.getText(range.index, range.length);
-
-  //       const format = quill.getFormat(range.index, range.length);
-  //       toggleToolbar(true);
-
-  //       setSelectionFormat(contentId, format as { [key: string]: string });
-  //     }
-  //   });
-
-  //   return () => {
-  //     quill.off("selection-change");
-  //     toggleToolbar(false);
-  //   };
-  // }, [quill, setSelectionFormat, toggleToolbar, index, setActiveContent]);
-
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (quill) {
@@ -179,11 +167,11 @@ const EditableContent = ({ value, index, parentIndex }: { value: TextContent; in
       });
 
       return () => {
-        quill.off("selection-change");
-        toggleToolbar(false);
+        // quill.off("selection-change");
+        // toggleToolbar(false);
       };
     }
-  }, [quill, quillRef, setSelectionFormat, toggleToolbar, contentId, setActiveContent]);
+  }, [quill, quillRef, setSelectionFormat, toggleToolbar, setActiveContent]);
 
   useEffect(() => {
     if (!quill) return;
@@ -193,55 +181,44 @@ const EditableContent = ({ value, index, parentIndex }: { value: TextContent; in
     }
   }, [quill, activeContent, contentId, toggleToolbar]);
 
-  const getSelectionPosition = (quill: Quill) => {
-    const selection = quill.getSelection();
-    if (!selection) return null;
-
-    const bounds = quill.getBounds(selection.index, selection.length);
-    if (!bounds) return null;
-
-    const quillContainer = quill.container.getBoundingClientRect();
-
-    const relativeX = Math.round(bounds.left);
-    const relativeY = Math.round(bounds.top);
-
-    const absoluteX = Math.round(quillContainer.left + bounds.left);
-    const absoluteY = Math.round(quillContainer.top + bounds.top);
-
-    return {
-      relative: { x: relativeX, y: relativeY },
-      absolute: { x: absoluteX, y: absoluteY },
-    };
-  };
+  useEffect(() => {
+    // if (!quill) return;
+    // if (previousThemeRef.current.includes(item.value.attrs.color)) {
+    //   if (item.value.type === TextContentHeadingType.Heading1) {
+    //     quill.formatText(0, quill.getLength(), {
+    //       color: theme.primary,
+    //     });
+    //   } else if (item.value.type === TextContentHeadingType.Heading4) {
+    //     const content = quill.getContents();
+    //     const contentUpdated = content.ops.map((op) => {
+    //       if (op.attributes?.color !== secondaryThemeRef.current) {
+    //         return {
+    //           ...op,
+    //           attributes: {
+    //             ...op.attributes,
+    //             color: theme.primary,
+    //           },
+    //         };
+    //       }
+    //       return op;
+    //     });
+    //     quill.formatText(0, quill.getLength(), {
+    //       color: theme.secondary,
+    //     });
+    //     quill.setContents(contentUpdated);
+    //   }
+    // }
+  }, []);
 
   useEffect(() => {
     if (!quill) return;
-    if (previousThemeRef.current.includes(item.value.attrs.color)) {
-      if (item.value.type === TextContentHeadingType.Heading1) {
-        quill.formatText(0, quill.getLength(), {
-          color: theme.primary,
-        });
-      } else if (item.value.type === TextContentHeadingType.Heading4) {
-        const content = quill.getContents();
-        const contentUpdated = content.ops.map((op) => {
-          if (op.attributes?.color !== secondaryThemeRef.current) {
-            return {
-              ...op,
-              attributes: {
-                ...op.attributes,
-                color: theme.primary,
-              },
-            };
-          }
-          return op;
-        });
-        quill.formatText(0, quill.getLength(), {
-          color: theme.secondary,
-        });
-        quill.setContents(contentUpdated);
-      }
-    }
-  }, [quill, theme, item.value.attrs.color, item.value.type]);
+
+    quill.on("text-change", (delta, oldDelta, source) => {
+      const content = quill.getContents();
+      const itemChanged: ContentValues[] = convertDeltaOpsToTextContent(content.ops);
+      item.onChange(itemChanged);
+    });
+  }, [quill, item.onChange]);
 
   return (
     // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>

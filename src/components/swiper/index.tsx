@@ -5,7 +5,7 @@ import "swiper/css/pagination";
 
 import "./styles.css";
 import { useEffect, useRef, useState, type ComponentProps } from "react";
-import { useController, type Control } from "react-hook-form";
+import { useController, useFormContext, type Control } from "react-hook-form";
 import { useSlideThemeStore } from "@/store/slide-theme-store";
 import { cn } from "@/lib/utils";
 import { TransformWrapper, TransformComponent, useControls } from "react-zoom-pan-pinch";
@@ -16,22 +16,23 @@ import type { ISlideItems } from "@/types/slide-content";
 import SlideContent from "../carousel/content";
 import { EditableContent } from "../editable-content";
 import CardContent from "../carousel/card";
+import { useSlideControl } from "@/store/slide-control";
 
 const SwiperCarousel = ({
   children,
   size,
-  control,
   ...props
 }: // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-SwiperProps & { size: any; control: Control<{ slide: ISlideItems[] }> }) => {
+SwiperProps & { size: any; }) => {
   const [sizeSc, scaleSc] = useState(size);
-  const [swipe, setSwipe] = useState(true);
+  const {swipe, setSwipe} = useSlideControl();
   const [pan, setPan] = useState(false);
   const { theme } = useSlideThemeStore();
   const swiperRef = useRef<SwiperRef | null>(null);
 
   const [active, setActive] = useState(swiperRef.current?.swiper.activeIndex || 0);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Control") {
@@ -79,13 +80,16 @@ SwiperProps & { size: any; control: Control<{ slide: ISlideItems[] }> }) => {
     }
   }, [active]);
 
+
+  const {control} = useFormContext()
+
   const { field: slides } = useController({
     control,
-    name: "slide",
+    name: "slides",
   });
 
   return (
-    <div className="h-full genius-slides">
+    <div  className="h-full genius-slides">
       <TransformWrapper
         initialScale={1}
         doubleClick={{
@@ -93,7 +97,7 @@ SwiperProps & { size: any; control: Control<{ slide: ISlideItems[] }> }) => {
         }}
         panning={{
           disabled: !pan,
-          excluded: ["title", "sub", "drag-ghost", "ql-container"],
+          excluded: ["title", "sub", "drag-ghost", "ql-container", ],
         }}
       >
         {({ zoomIn, zoomOut, resetTransform, instance, ...rest }) => (
@@ -125,25 +129,26 @@ SwiperProps & { size: any; control: Control<{ slide: ISlideItems[] }> }) => {
               contentStyle={{
                 height: "100%",
                 width: "100%",
-              }}
+                cursor: pan?"grab":"inherit"              }}
               wrapperStyle={{
                 height: "100%",
                 position: "relative",
                 overflow: "visible",
                 width: "100%",
+                
               }}
             >
               <Swiper
                 slidesPerView={"auto"}
                 spaceBetween={10}
                 centeredSlides
+              
                 className="genius-swiper-slides"
                 breakpoints={{
                   940: {
                     slidesPerView: 1,
                     spaceBetween: 150,
                   },
-
                   1080: {
                     slidesPerView: 2,
                     spaceBetween: 10,
@@ -161,30 +166,27 @@ SwiperProps & { size: any; control: Control<{ slide: ISlideItems[] }> }) => {
                       className={cn("", {
                         "swiper-no-swiping": pan || !swipe,
                         "opacity-40 ": active !== index,
+                        "have-more": slides.value.length > 1,
                       })}
                       style={{
                         transition: "opacity 0.7s ease",
                       }}
                       onClick={() => {
-                        console.log("clicked");
                         setActive(index);
                       }}
                     >
                       <CardContent
+                    
                         scale={instance.transformState.scale}
                         index={index}
                         item={item}
                         size={sizeSc}
                         key={String(index)}
                         className={cn("relative", {
-                          "pointer-events-none": active !== index,
+                          "pointer-events-none": active !== index || pan,
+                          
                         })}
-                        onMouseEnter={() => {
-                          if (swipe) setSwipe(false);
-                        }}
-                        onMouseLeave={() => {
-                          if (!swipe) setSwipe(true);
-                        }}
+                       
                       />
                     </SwiperSlide>
                   ))}
@@ -195,5 +197,4 @@ SwiperProps & { size: any; control: Control<{ slide: ISlideItems[] }> }) => {
       </TransformWrapper>
     </div>
   );
-};
-export { SwiperCarousel };
+};export { SwiperCarousel };

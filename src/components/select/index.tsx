@@ -17,7 +17,9 @@ const Select = ({ onChange, value, options, className }: SelectProps) => {
   return (
     <SelectShad onValueChange={handleSelectChange}>
       <SelectTrigger className={cn(className)}>
-        <div className="flex justify-between w-full pr-3 text-foreground">{value}</div>
+        <div className="flex justify-between w-full pr-3 text-foreground">
+          {options.find(options  => options.value === value)?.label}
+        </div>
       </SelectTrigger>
       <SelectContent className="w-full">
         {options.map(({ label, value }) => (

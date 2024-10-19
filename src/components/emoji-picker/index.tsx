@@ -9,7 +9,6 @@ import { cn } from "@/lib/utils";
 
 export const EmojiPicker = ({ onChange }: { onChange: (emoji: string) => void }) => {
   const handleEmojiSelect = (emoji: { native: string }) => {
-    console.log(emoji);
     onChange?.(emoji?.native);
   };
 
