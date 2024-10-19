@@ -28,6 +28,7 @@ SwiperProps & { size: any; }) => {
   const {swipe, setSwipe} = useSlideControl();
   const [pan, setPan] = useState(false);
   const { theme } = useSlideThemeStore();
+  const [zoomLevel, setZoomLevel] = useState(1);
   const swiperRef = useRef<SwiperRef | null>(null);
 
   const [active, setActive] = useState(swiperRef.current?.swiper.activeIndex || 0);
@@ -99,8 +100,11 @@ SwiperProps & { size: any; }) => {
           disabled: !pan,
           excluded: ["title", "sub", "drag-ghost", "ql-container", ],
         }}
+        onZoom={(e) => {
+          setZoomLevel(e.state.scale);
+        }}
       >
-        {({ zoomIn, zoomOut, resetTransform, instance, ...rest }) => (
+        {({ zoomIn, zoomOut, resetTransform, instance,  ...rest }) => (
           <>
             <Controls onZoomIn={zoomIn} onZoomOut={zoomOut} />
             <ul className="flex gap-1 items-center absolute bottom-5 left-1/2 -translate-x-1/2  z-50">
@@ -138,6 +142,7 @@ SwiperProps & { size: any; }) => {
                 
               }}
             >
+
               <Swiper
                 slidesPerView={"auto"}
                 spaceBetween={10}
@@ -176,8 +181,7 @@ SwiperProps & { size: any; }) => {
                       }}
                     >
                       <CardContent
-                    
-                        scale={instance.transformState.scale}
+                        scale={zoomLevel}
                         index={index}
                         item={item}
                         size={sizeSc}
@@ -191,9 +195,12 @@ SwiperProps & { size: any; }) => {
                     </SwiperSlide>
                   ))}
               </Swiper>
+
             </TransformComponent>
           </>
+
         )}
+
       </TransformWrapper>
     </div>
   );
