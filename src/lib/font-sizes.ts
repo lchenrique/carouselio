@@ -1,21 +1,36 @@
 export const AvailableFontSizeValues = [
-  "10px", // Bem pequeno
-  "12px", // Pequeno
-  "14px", // Padrão
-  "16px", // Médio
-  "18px", // Grande
-  "20px", // Maior
-  "24px", // Muito Grande
-  "28px", // Entre grande e extra grande
-  "32px", // Extra Grande
-  "40px", // Super Grande
-  "44px", // Super Grande
-  "48px", // Enorme
-  "52px", // Extra Enorme
-  "60px", //
-  "64px", // Ultra Enorme
-  "72px", // Gigante
-  "80px", // Muito Gigante
-  "96px", // Enorme Gigante
-  "120px", // Maior Gigante
+  "10", // Bem pequeno
+  "12", // Pequeno
+  "14", // Padrão
+  "16", // Médio
+  "18", // Grande
+  "20", // Maior
+  "24", // Muito Grande
+  "28", // Entre grande e extra grande
+  "32", // Extra Grande
+  "40", // Super Grande
+  "44", // Super Grande
+  "48", // Enorme
+  "52", // Extra Enorme
+  "60", //
+  "64", // Ultra Enorme
+  "72", // Gigante
+  "80", // Muito Gigante
+  "96", // Enorme Gigante
+  "120", // Maior Gigante
+];
+
+export const AvailableHeadingsValues = [
+  {
+    label: "Heading 1",
+    value: "1",
+  },
+  {
+    label: "Heading 2",
+    value: "2",
+  },
+  {
+    label: "Heading 3",
+    value: "3",
+  },
 ];

@@ -55,7 +55,7 @@ const FloatingToolbar = () => {
       <div className="absolute  mx-auto flex gap-1 p-1 top-14 border w-min left-0 right-0  bg-white  z-50 rounded-xl shadow-xl shadow-slate-900/5">
         <Select
           className="w-40 h-8"
-          value={selectionFormat[activeContent]?.font as unknown as string}
+          value={selectionFormat[activeContent]?.font as string}
           onChange={(value) => handleFormat("font", value)}
           options={fonts.map((font) => ({
             label: font,
@@ -65,7 +65,7 @@ const FloatingToolbar = () => {
         <div className=" flex space-x-2">
           <Select
             className="h-8"
-            value={selectionFormat[activeContent]?.size as unknown as string}
+            value={selectionFormat[activeContent]?.size as string}
             onChange={(value) => handleFormat("size", value)}
             options={AvailableFontSizeValues.map((font) => ({
               label: font,
@@ -124,13 +124,21 @@ const FloatingToolbar = () => {
           value={
             Array.isArray(selectionFormat[activeContent]?.color)
               ? selectionFormat[activeContent]?.color[0]
-              : selectionFormat[activeContent]?.color || theme.primary
+              : selectionFormat[activeContent]?.color || (
+                Array.isArray(selectionFormat[activeContent]?.gradient)
+                ? selectionFormat[activeContent]?.gradient[0]
+                : selectionFormat[activeContent]?.gradient 
+              )  || theme.primary
           }
-          onChange={(color) => {
+          onChange={(color: string, gradient?: boolean) => {
+            if(gradient){
+              handleFormat("gradient", color)
+              return
+            }
             handleFormat("color", color);
           }}
         />
-        <EmojiPicker onChange={(emoji: string | boolean) => handleFormat("emoji", emoji)} />
+        <EmojiPicker onChange={(emoji: string) => handleFormat("emoji", emoji)} />
 
         {/* <ColorSelector onChange={handleBackgroundChange} value={theme.background} /> */}
         <Button onClick={() => handleFormat("align", "")} size="icon" variant="ghost" className="text-base size-8">
@@ -166,5 +174,7 @@ const FloatingToolbar = () => {
       </div>
     </div>
   );
+
 };
+
 export { FloatingToolbar };

@@ -12,17 +12,15 @@ export function ColorPicker({ onChange, value }: { onChange: (value: string) => 
     onChange?.(newColor);
   };
 
-  //   const handlePredefinedColorClick = (predefinedColor: string) => {
-  //     setColor(predefinedColor);
-  //   };
 
   return (
     <div className="w-full">
+      
       <HexColorPicker
         color={value}
         onChange={handleColorChange}
         className="w-full"
-        style={{ width: "100%", height: 100 }}
+        style={{ width: "100%", height: 150 }}
       />
     </div>
   );

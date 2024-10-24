@@ -15,7 +15,7 @@
 
 Você pode testar o **VisuaLab Studio** acessando o link abaixo:
 
-[VisuaLab Studio - Ferramenta de Carrossel](https://carouselio.vercel.app/carousel-tool)
+[VisuaLab Studio - Ferramenta de Carrossel](https://carouselio.vercel.app/editor)
 
 ## Roadmap Futuro
 

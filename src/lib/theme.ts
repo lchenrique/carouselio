@@ -35,6 +35,15 @@ const themes: Record<string, Theme> = {
     "base-100": "#280647", // Soft White
     pattern: "nested",
   },
+
+  daylightBreeze: {
+    "color-scheme": "vibrant",
+    primary: "#00aaff", // Sky Blue
+    secondary: "#ffc0cb", // Light Pink
+    accent: "#ff69b4", // Soft Pink
+    "base-100": "#ffffff", // White
+    pattern: "flat",
+  }
 };
 
 export default themes;

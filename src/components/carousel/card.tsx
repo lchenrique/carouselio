@@ -38,7 +38,7 @@ function CardContent({ index, item, size, onMouseEnter, onMouseLeave, scale, cla
         />
         <div className="relative h-full  w-full flex items-center justify-center">
           <div className="bg-white/0  rounded-xl h-full  w-full">
-            <DragableContainer itemsData={item.contentItems} scale={scale} index={index} />
+            <DragableContainer itemsData={item.contentItems}  index={index} />
           </div>
         </div>
       </Card>

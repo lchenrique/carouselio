@@ -17,7 +17,7 @@ export const EmojiPicker = ({ onChange }: { onChange: (emoji: string) => void })
       <Popover modal>
         <PopoverTrigger asChild>
           <Button variant="ghost" className={cn("text-base p-0 size-8")}>
-            <Smile className="size-4" />
+            <Smile size={15}  strokeWidth={1}/>
           </Button>
         </PopoverTrigger>
         <PopoverContent className="p-0">

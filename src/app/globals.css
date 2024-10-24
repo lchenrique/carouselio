@@ -1,4 +1,5 @@
 @import "./_style/fonts.css";
+@import "./_style/heading.css";
 
 @tailwind base;
 @tailwind components;
@@ -83,6 +84,15 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+}
+
+span, p{
+  padding: 0 ;
+  margin: 0 ;
+  line-height: 1.4;
+}
+em{
+  padding-right: 4px ;
 }
 
 .disable-click {
@@ -204,4 +214,9 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+
+.ProseMirror, .swiper-wrapper, .swiper{
+  position: static !important;
 }

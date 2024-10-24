@@ -8,11 +8,11 @@ export interface IUseSlideThemeStore {
 
 export const useSlideThemeStore = create<IUseSlideThemeStore>((set) => ({
   theme: {
-    primary: pallettes.vibrant.cosmicBlaze.primary,
-    secondary: pallettes.vibrant.cosmicBlaze.secondary,
-    background: pallettes.vibrant.cosmicBlaze.background,
-    baseContent: pallettes.vibrant.cosmicBlaze.baseContent,
-    pattern: pallettes.vibrant.cosmicBlaze.pattern,
+    primary: pallettes.vibrant.daylightBreeze.primary,
+    secondary: pallettes.vibrant.daylightBreeze.secondary,
+    background: pallettes.vibrant.daylightBreeze.background,
+    baseContent: pallettes.vibrant.daylightBreeze.baseContent,
+    pattern: pallettes.vibrant.daylightBreeze.pattern,
   },
   setTheme: (theme) => set({ theme }),
 }));
