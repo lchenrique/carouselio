@@ -26,14 +26,9 @@ function generateGradients(colorPairs: string[][]) {
 }
 
 const colorsg= [
-	["#FDEB71", "#F8D800"],
-	["#ABDCFF", "#0396FF"],
 	["#FEB692", "#EA5455"],
 	["#CE9FFC", "#7367F0"],
-	["#90F7EC", "#32CCBC"],
 	["#FFF6B7", "#F6416C"],
-	["#81FBB8", "#28C76F"],
-	["#E2B0FF", "#9F44D3"],
 	["#F97794", "#623AA2"],
 	["#FCCF31", "#F55555"],
 	["#F761A1", "#8C1BAB"],
@@ -66,7 +61,6 @@ const colorsg= [
 	["#FD6585", "#0D25B9"],
 	["#FD6E6A", "#FFC600"],
 	["#65FDF0", "#1D6FA3"],
-	["#6B73FF", "#000DFF"],
 	["#FF7AF5", "#513162"],
 	["#F0FF00", "#58CFFB"],
 	["#FFE985", "#FA742B"],

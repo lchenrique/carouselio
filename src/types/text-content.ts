@@ -11,10 +11,9 @@ export enum TextContentHeadingType {
   Heading8 = "16px",
 }
 
-export interface TextContent {
-  id: string;
-  values: ContentValues[];
-}
+export type TextContent = 
+  | { id: string; type: "image"; values: ContentValuesImage  }
+  | { id: string; type?: string; values: ContentValues[] };
 
 
 export interface ContentValues {
@@ -25,9 +24,20 @@ export interface ContentValues {
     color?: string;
     font?: string;
     size?: string;
+    align?: "left" | "center" | "right" | "justify";
   };
   value: string;
 }
+
+
+export interface ContentValuesImage {
+  attrs?: {
+    h: string;
+    w: string;
+  };
+  value: string;
+}
+
 
 
 export const getDefaultColor = (type: TextContentHeadingType): keyof Theme => {

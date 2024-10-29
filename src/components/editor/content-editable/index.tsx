@@ -1,30 +1,24 @@
 "use client";
-import { EditorContent, FloatingMenu, BubbleMenu, useEditor } from "@tiptap/react";
-import BubbleMenuExt from "@tiptap/extension-bubble-menu";
-import StarterKit from "@tiptap/starter-kit";
-import { FontBoldIcon } from "@radix-ui/react-icons";
-import { BubbleButton, BubbleButtonGroup } from "./bubble-button";
-import { EditoMenu } from "./menu";
 import { useEditorContext } from "@/providers/editor-provider";
-import { useEffect, useState } from "react";
-import Underline from "@tiptap/extension-underline";
-import { FontSize } from "../extensions/font-size";
-import TextStyle from "@tiptap/extension-text-style";
 import { Color } from "@tiptap/extension-color";
+import TextStyle from "@tiptap/extension-text-style";
+import Underline from "@tiptap/extension-underline";
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import { useCallback, useEffect, useMemo } from "react";
+import { FontSize } from "../extensions/font-size";
 import { ColorG } from "../extensions/text-gradient";
 
-import Document from "@tiptap/extension-document";
-import Heading from "@tiptap/extension-heading";
-import Paragraph from "@tiptap/extension-paragraph";
-import Text from "@tiptap/extension-text";
-import TextAlign from '@tiptap/extension-text-align'
-import { useController, useFormContext } from "react-hook-form";
+import { useContentControl } from "@/hooks/use-content-control";
 import { convertToEditor } from "@/lib/convert-to-editor";
-import FontFamily from '@tiptap/extension-font-family'
+import FontFamily from "@tiptap/extension-font-family";
+import TextAlign from "@tiptap/extension-text-align";
+import { useController, useFormContext } from "react-hook-form";
 
 export interface ContentEditableProps {
   index: number;
   parentIndex: number;
+  onClikeOutside?: (index: number) => void;
 }
 
 const extensions = [
@@ -34,80 +28,200 @@ const extensions = [
   TextStyle,
   Color,
   ColorG,
-  Paragraph,
-  Document,
-  Text,
   FontFamily,
   TextAlign.configure({
-    types: ['heading', 'paragraph'],
-  }),
-  Heading.configure({
-    levels: [1, 2, 3],
+    types: ["heading", "paragraph"],
   }),
 ];
 
-export const ContentEditable = ({ parentIndex, index }: ContentEditableProps) => {
+const ContentEditable = ({ parentIndex, index, onClikeOutside: outSideClick }: ContentEditableProps) => {
   const { control } = useFormContext();
   const contentId = `slides.${parentIndex}.contentItems.${index}.values`;
   const { field } = useController({ name: contentId, control });
+  const { setShowToolbar } = useEditorContext();
+  const setAttrsPrev = useContentControl((state) => state.setAttrsPrev);
+  const attrs = useContentControl((state) => state.attrs);
+  const activeId = useContentControl((state) => state.activeItemId);
+  const isEditing = useContentControl((state) => state.isEditing);
 
-  const { setActiveEditor, activeEditor, setShowToolbar } = useEditorContext(); 
-  const [isSelected, setIsSelected] = useState(false);
-  
+  const id = `${parentIndex}-${index}`;
+  const editorIsEditing = activeId === id && isEditing;
+
+  const valuesConverted = useMemo(() => {
+    if (field.value) {
+      return convertToEditor(field.value);
+    }
+  }, [field.value]);
+
   const editor = useEditor({
+    editable: isEditing,
     extensions,
     content: {
       type: "doc",
-      content:convertToEditor(field.value),
+      content: valuesConverted,
     },
     editorProps: {
       attributes: {
+        id: id,
         class: "outline-none",
       },
     },
   });
-  useEffect(() => {
-    if (editor) {
-      setActiveEditor(editor); 
+
+  const getColorAttrs = useCallback(() => {
+    if (editorIsEditing && attrs?.color && editor) {
+      if (attrs?.color.startsWith("linear-gradient")) {
+        editor
+          .chain()
+          .focus()
+          .setColorG(attrs?.color || "")
+          .run();
+        return;
+      }
+
+      if (editor.getAttributes("textStyle")?.colorG) {
+        editor.chain().focus().setColorG("").run();
+      }
+
+      if (editor.getAttributes("textStyle")?.color !== attrs?.color) {
+        editor
+          .chain()
+          .focus()
+          .setColor(attrs?.color || "")
+          .run();
+      }
     }
-  }, [editor, setActiveEditor]);
+  }, [editor, editorIsEditing, attrs?.color]);
 
-  function handleEditorClick() {
-    setActiveEditor(editor); 
-    setShowToolbar(true);
-    setIsSelected(true);
-  }
+  const getFontAttrs = useCallback(() => {
+    if (editorIsEditing && attrs?.font && editor) {
+      if (editor.getAttributes("textStyle")?.fontFamily !== attrs?.font) {
+        editor
+          .chain()
+          .focus()
+          .setFontFamily(attrs?.font || "")
+          .run();
+      }
+    }
+  }, [editor, editorIsEditing, attrs?.font]);
 
-  useEffect(() => {
-    if (editor) {
-      editor.on("blur", () => {
-        setIsSelected(false);
+  const getFontSizeAttrs = useCallback(() => {
+    if (editorIsEditing && attrs?.size && editor) {
+      if (editor.getAttributes("textStyle")?.fontSize !== attrs?.size) {
+        editor
+          .chain()
+          .focus()
+          .setFontSize(attrs?.size || "")
+          .run();
+      }
+    }
+  }, [editor, editorIsEditing, attrs?.size]);
+
+  const getTextStyleAttrs = useCallback(() => {
+    if (editorIsEditing && editor && attrs?.bold !== undefined) {
+      editor.chain().focus().toggleBold().run();
+    }
+    if (editorIsEditing && editor && attrs?.italic !== undefined) {
+      editor.chain().focus().toggleItalic().run();
+    }
+    if (editorIsEditing && editor && attrs?.underline !== undefined) {
+      editor.chain().focus().toggleUnderline().run();
+    }
+    if (editorIsEditing && editor && attrs?.align) {
+      editor.chain().focus().setTextAlign(attrs?.align).run();
+    }
+  }, [attrs?.bold, editor, editorIsEditing, attrs?.italic, attrs?.underline, attrs?.align]);
+
+  const getEmojiAttrs = useCallback(() => {
+    if (editorIsEditing && attrs?.emoji && editor) {
+      editor.chain().focus().insertContent(attrs?.emoji).run();
+    }
+  }, [editor, editorIsEditing, attrs?.emoji]);
+
+  const updateColorAttrsPrev = useCallback(() => {
+    if (
+      editor &&
+      editorIsEditing &&
+      (editor.getAttributes("textStyle")?.color || editor.getAttributes("textStyle")?.colorG)
+    ) {
+      setAttrsPrev({
+        color: editor.getAttributes("textStyle")?.colorG || editor.getAttributes("textStyle")?.color,
       });
     }
-  }, [editor]);
+  }, [editor, editorIsEditing, setAttrsPrev]);
 
-  if (!editor) {
-    return null;
-  }
+  const updateFontStyleAttrsPrev = useCallback(() => {
+    if (editor && editorIsEditing) {
+      setAttrsPrev({
+        bold: editor.isActive("bold"),
+        italic: editor.isActive("italic"),
+        underline: editor.isActive("underline"),
+        align: editor.getAttributes("paragraph")?.textAlign,
+      });
+    }
+  }, [editor, editorIsEditing, setAttrsPrev]);
 
-  activeEditor?.on("selectionUpdate", ({ editor }) => {
-    // if (activeEditor.state.doc.content.size === 0) {
-    //   activeEditor.commands.setContent("<span></span>");
-    // }
-    // console.log(activeEditor.getJSON());
-    setShowToolbar(activeEditor.state.selection.empty === false);
-  });
+  const updateFontFamilyStyleAttrsPrev = useCallback(() => {
+    if (editor && editorIsEditing && editor.getAttributes("textStyle")?.fontFamily !== attrs?.font) {
+      setAttrsPrev({
+        font: editor.getAttributes("textStyle")?.fontFamily,
+      });
+    }
+  }, [editor, editorIsEditing, setAttrsPrev, attrs?.font]);
+
+  const updateFontSizeAttrsPrev = useCallback(() => {
+    if (editor && editorIsEditing && editor.getAttributes("textStyle")?.fontSize !== attrs?.size) {
+      setAttrsPrev({
+        size: editor.getAttributes("textStyle")?.fontSize,
+      });
+    }
+  }, [editor, editorIsEditing, setAttrsPrev, attrs?.size]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (editorIsEditing) {
+      setShowToolbar(isEditing);
+      editor?.setEditable(isEditing);
+      editor?.commands.focus();
+      editor?.commands.selectAll();
+      updateColorAttrsPrev();
+      updateFontStyleAttrsPrev();
+      updateFontFamilyStyleAttrsPrev();
+      updateFontSizeAttrsPrev();
+    }
+  }, [isEditing, setShowToolbar, editor, editorIsEditing, updateColorAttrsPrev, updateFontStyleAttrsPrev]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (editorIsEditing) {
+      getColorAttrs();
+      getTextStyleAttrs();
+      getEmojiAttrs();
+      getFontAttrs();
+      getFontSizeAttrs();
+    }
+  }, [editor, editorIsEditing, attrs]);
+
+  useEffect(() => {
+    editor?.on("selectionUpdate", ({ editor }) => {
+      updateColorAttrsPrev();
+      updateFontStyleAttrsPrev();
+      updateFontFamilyStyleAttrsPrev();
+      updateFontSizeAttrsPrev();
+    });
+
+    return () => {
+      editor?.off("selectionUpdate");
+    };
+  }, [editor, updateColorAttrsPrev, updateFontStyleAttrsPrev, updateFontFamilyStyleAttrsPrev, updateFontSizeAttrsPrev]);
+
 
   return (
-    <div data-active={isSelected} className="editor   rounded-lg outline-none  w-full">
-      <EditorContent
-        editor={editor}
-        className="w-full"
-        onFocus={() => {
-          handleEditorClick();
-          editor?.commands.focus();
-        }}
-      />
+    <div className="editor rounded-lg outline-none  w-full">
+      <EditorContent id={id} editor={editor} className="w-full" />
     </div>
   );
 };
+
+export { ContentEditable };
+

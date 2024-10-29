@@ -43,7 +43,7 @@ export const ColorG = Extension.create<TextGradientOptions>({
               }
 
               return {
-                style: `background: ${attributes.colorG} text; -webkit-text-fill-color: transparent; `,
+                style: `background: ${attributes.colorG} text; -webkit-text-fill-color: transparent; transition: all 200ms ease-in-out;`,
               };
             },
           },

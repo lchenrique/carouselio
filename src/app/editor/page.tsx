@@ -3,20 +3,52 @@ import { EditoMenu, type EditoMenuHandles } from "@/components/editor/content-ed
 import { EditorSlider } from "@/components/editor/editor-slide";
 import { ZoomWrapper } from "@/components/editor/zoom-wrapper";
 import { ZoomTransform } from "@/components/editor/zoom-wrapper/zoom-transform";
+import { SheetDemo } from "@/components/panel";
 import { Button, SidebarTrigger } from "@/components/ui";
 import { useSidebar } from "@/components/ui/sidebar";
 import { useClickOutside } from "@/hooks/use-click-outside";
+import { useContentControl } from "@/hooks/use-content-control";
 import { cn } from "@/lib/utils";
 import { EditorProvider } from "@/providers/editor-provider";
-import { useRef } from "react";
+import { memo, useRef } from "react";
 
-export default function Page() {
-  const { isMobile, open } = useSidebar();
+const Editor = memo(() => {
+  const setActiveItemId = useContentControl((state) => state.setActiveItemId);
+  const setIsEditing = useContentControl((state) => state.setIsEditing);
+
   const menuRef = useRef<EditoMenuHandles>();
-
   const ref = useClickOutside(() => {
     menuRef.current?.hideMenu();
+    setActiveItemId(null);
+    setIsEditing(false);
   });
+
+  return (
+    <>
+      <EditorProvider>
+        <ZoomWrapper>
+          {(_, scale) => {
+            return (
+              <>
+                <div className="h-screen w-full flex items-center overflow-hidden relative ">
+                  <div ref={ref as React.RefObject<HTMLDivElement>} className="w-[400] mx-auto ">
+                    <EditoMenu ref={menuRef as React.RefObject<EditoMenuHandles>} />
+                    <SheetDemo />
+
+                    <EditorSlider ref={menuRef as React.RefObject<EditoMenuHandles>} scale={scale} />
+                  </div>
+                </div>
+              </>
+            );
+          }}
+        </ZoomWrapper>
+      </EditorProvider>
+    </>
+  );
+});
+
+export default function Page() {
+  const { isMobile } = useSidebar();
 
   return (
     <div className="rounded-lg w-full ">
@@ -41,24 +73,7 @@ export default function Page() {
         </div>
       </header>
       <div className="relative bolinha">
-        <ZoomWrapper>
-          {(_, scale) => {
-            return (
-              <>
-                <EditorProvider>
-                  <div className="h-screen w-full flex items-center overflow-hidden ">
-                    <div ref={ref as React.RefObject<HTMLDivElement>} className="bg-red-50  w-[400] mx-auto ">
-                      <EditoMenu ref={menuRef as React.RefObject<EditoMenuHandles>} />
-                      <ZoomTransform>
-                        <EditorSlider scale={scale} />
-                      </ZoomTransform>
-                    </div>
-                  </div>
-                </EditorProvider>
-              </>
-            );
-          }}
-        </ZoomWrapper>
+        <Editor />
       </div>
     </div>
   );

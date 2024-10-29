@@ -13,7 +13,6 @@ export const convertToEditor = (values: ContentValues[]): JSONContent[] => {
 
       for (const [key, value] of Object.entries(attrs)) {
         if ("color, font, size".includes(key)) {
-          console.log(key)
           if (key === "size") {
             Object.assign(initialAttrs, {
               fontSize: value,

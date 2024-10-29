@@ -1,0 +1,9 @@
+    #magic-close:before {
+        background-color: hsl(var(--primary)) !important;
+    }
+    #magic-close:after {
+        background-color: hsl(var(--primary)) !important;
+    }
+    .magic-panel-wrapper{
+        position: absolute !important;
+    }

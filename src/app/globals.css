@@ -95,6 +95,7 @@ em{
   padding-right: 4px ;
 }
 
+
 .disable-click {
   pointer-events: none;
   cursor: default;
@@ -106,6 +107,41 @@ em{
     @apply bg-[#F2F2F7] text-foreground;
   }
 }
+/* Esconde o scrollbar por padrão */
+.scrollbar-container {
+  overflow-y: auto;
+  max-height: 400px;
+}
+
+.scrollbar-content {
+  transition: opacity 0.3s ease;
+}
+
+.scrollbar-visible::-webkit-scrollbar {
+  opacity: 1;
+}
+
+.scrollbar-content::-webkit-scrollbar {
+  height: 8px;
+  opacity: 0; /* Inicialmente invisível */
+}
+
+.scrollbar-content::-webkit-scrollbar-track {
+  background-color: #e0b3b389;
+  border-radius: 4px;
+}
+
+.scrollbar-content::-webkit-scrollbar-thumb {
+  background-color: #b0b0b0;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.scrollbar-content::-webkit-scrollbar-thumb:hover {
+  background-color: #909090;
+}
+
+
 /* .slick-list {
 	@apply h-full  flex items-center p-0    !important;
 }

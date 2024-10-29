@@ -1,94 +1,160 @@
 /* Estilo para o handle de redimensionamento no canto sudeste (inferior direito) */
 
   /* Estilo para os outros handles de redimensionamento (ex: norte, sul, leste, oeste) */
-  .react-grid-item{
-    @apply hover:border-primary border-transparent border !important;
-  }
+ 
   .react-grid-placeholder {
-   @apply bg-primary  !important;
+    z-index: 1 !important;
+   @apply bg-primary opacity-[.03] !important;
 
   }
-  .react-grid-item:hover .react-resizable-handle {
-    opacity: .2 !important;
+  .react-grid-item {
+   @apply subpixel-antialiased !important;
+    transition: all 0.2s ease-in-out;
+    z-index: 3;
+  }
+  .react-grid-item .react-resizable-handle {
+    display: none !important;
+    opacity: 1 !important;
+  }
+  .react-grid-item.selected .react-resizable-handle {
+    display: block !important;
+    opacity: 1 !important;
   }
   .react-resizable-handle{
     background-image: none !important;
     opacity: 0 !important;
-
-  }
-  .react-resizable-handle-e, 
-  .react-resizable-handle-w,
-  .react-resizable-handle-n,
-  .react-resizable-handle-s {
-    @apply bg-primary size-2 !important;
     transform: rotate(0) !important
   }
-  .react-resizable-handle-e{
-    right: -5px !important;
-    transform: translateY(-50%) !important;
-    margin-top: 0 !important;
-  }
-  .react-resizable-handle-w{
-    left: -5px !important;
-    transform: translateY(-50%) !important;
-    margin-top: 0 !important;
-  }
-  .react-resizable-handle-n{
-    top: -5px !important;
-    transform: translateX(-50%) !important;
-    margin-left: 0 !important;
-  }
-  .react-resizable-handle-s{
-    bottom: -5px !important;
-    transform: translateX(-50%) !important;
-    margin-left: 0 !important;
+
+  .react-resizable-handle-n,
+  .react-resizable-handle-s {
+    @apply hidden !important;
   }
 
 
-
-  .react-resizable-handle-e::after, 
-  .react-resizable-handle-w::after,
-  .react-resizable-handle-n::after,
-  .react-resizable-handle-s::after,
-  .react-resizable-handle-ne::after,
-  .react-resizable-handle-nw::after,
-  .react-resizable-handle-sw::after,
-  .react-resizable-handle::after
-  {
-    display: none !important;
-  }
-
-
-  /* Outros estilos para outros cantos (opcional) */
-
-
-  .react-resizable-handle-se {
-    @apply bg-primary size-2   !important  ; 
-    bottom: -5px !important;
-    right: -5px !important;
-    cursor: se-resize;          /* Mantém o cursor correto */
-  }
-  .react-resizable-handle-se::after {
-    display: none !important;
-  }
-  .react-resizable-handle-ne{
-    top: -5px !important;
-    right: -5px !important;
-    
-  }
-  .react-resizable-handle-nw{
-    top: -5px !important;
-    left: -5px !important;
-  }
-  .react-resizable-handle-sw{
-    bottom: -5px !important;
-    left: -5px !important;
-  }
- 
-  .react-resizable-handle-ne,
-  .react-resizable-handle-nw,
-  .react-resizable-handle-sw {
-    @apply bg-primary size-2   !important  ; 
-    cursor: pointer;
-  }
   
+
+/* Style handle*/
+
+
+ .react-resizable.selected {
+      border: 1px solid rgba(99, 101, 241, 0.582) !important;
+      border-radius: 8px !important;
+      box-shadow: 0 2px 10px rgba(99, 102, 241, 0.1) !important;
+    }
+
+    /* Estilo base para todos os handles de canto */
+    .react-resizable-handle {
+      width: 14px !important;
+      height: 14px !important;
+      background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
+      border: 1px solid rgba(99, 102, 241, 0.3) !important;
+      border-radius: 4px !important;
+      transition: all 0.2s ease !important;
+      box-shadow: 0 2px 4px rgba(99, 102, 241, 0.2) !important;
+    }
+
+  
+    /* Handles horizontais (topo e base) */
+    .react-resizable-handle-n,
+    .react-resizable-handle-s {
+      left: 50% !important;
+      transform: translateX(-50%)  !important;
+      width: 40px !important;
+      height: 10px !important;
+      border-radius: 6px !important;
+      cursor: ns-resize !important;
+    }
+
+    .react-resizable-handle-n { top: -5px !important; }
+    .react-resizable-handle-s { bottom: -5px !important; }
+
+    /* Handles verticais (esquerda e direita) */
+    .react-resizable-handle-w,
+    .react-resizable-handle-e {
+      top: 50% !important;
+      transform: translateY(-50%)  !important;
+      width: 10px !important;
+      height: 40px !important;
+      border-radius: 6px !important;
+      cursor: ew-resize !important;
+      margin: 0 !important;
+    }
+
+    .react-resizable-handle-w { left: -5px !important; }
+    .react-resizable-handle-e { right: -5px !important; }
+
+    /* Efeitos hover para handles de canto */
+    .react-resizable-handle:hover {
+      background: linear-gradient(135deg, #818cf8, #6366f1) !important;
+      box-shadow: 0 3px 6px rgba(99, 102, 241, 0.3) !important;
+      transform: scale(1.15) !important;
+      animation: glowing 1.5s infinite !important;
+    }
+
+    
+
+    .react-resizable-handle-w:hover,
+    .react-resizable-handle-e:hover {
+      transform: scale(1.1) translateY(-50%) !important;
+    }
+
+    /* Handles de canto */
+    .react-resizable-handle-nw {
+      top: -7px !important;
+      left: -7px !important;
+      cursor: nw-resize !important;
+    }
+
+    .react-resizable-handle-ne {
+      top: -7px !important;
+      right: -7px !important;
+      cursor: ne-resize !important;
+    }
+
+    .react-resizable-handle-sw {
+      bottom: -7px !important;
+      left: -7px !important;
+      cursor: sw-resize !important;
+    }
+
+    .react-resizable-handle-se {
+      bottom: -7px !important;
+      right: -7px !important;
+      cursor: se-resize !important;
+    }
+
+    /* Linha decorativa nos handles de canto */
+    .react-resizable-handle::after {
+      content: '' !important;
+      position: absolute !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) !important;
+      width: 6px !important;
+      height: 6px !important;
+      background: linear-gradient(135deg, #c7d2fe, #ffffff) !important;
+      border-radius: 2px !important;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .react-resizable-handle-n::after,
+    .react-resizable-handle-s::after {
+      width: 20px !important;
+      height: 3px !important;
+      border-radius: 1.5px !important;
+    }
+
+    .react-resizable-handle-w::after,
+    .react-resizable-handle-e::after {
+      width: 3px !important;
+      height: 20px !important;
+      border-radius: 1.5px !important;
+    }
+
+    @keyframes glowing {
+      0% { box-shadow: 0 2px 4px rgba(99, 102, 241, 0.2); }
+      50% { box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4); }
+      100% { box-shadow: 0 2px 4px rgba(99, 102, 241, 0.2); }
+    }
+

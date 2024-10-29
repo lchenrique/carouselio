@@ -14,7 +14,29 @@ const ScrollArea = React.forwardRef<
     className={cn("relative ", className)}
     {...props}
   >
-    <ScrollAreaPrimitive.Viewport className="h-full w-full rounded-[inherit]">
+    <ScrollAreaPrimitive.Viewport  onWheel={(e) => {
+            // here im handling the horizontal scroll inline, without the use of hooks
+            const strength = Math.abs(e.deltaY);
+            if (e.deltaY === 0) return;
+        
+            const el = e.currentTarget;
+            if (
+              !(el.scrollLeft === 0 && e.deltaY < 0) &&
+              !(
+                el.scrollWidth -
+                  el.clientWidth -
+                  Math.round(el.scrollLeft) ===
+                  0 && e.deltaY > 0
+              )
+            ) {
+              e.preventDefault();
+            }
+            el.scrollTo({
+              left: el.scrollLeft + e.deltaY,
+              // large scrolls with smooth animation behavior will lag, so switch to auto
+              behavior: strength > 70 ? "auto" : "smooth",
+            });
+          }} className="h-full w-full rounded-[inherit]">
       {children}
     </ScrollAreaPrimitive.Viewport>
     <ScrollBar />

@@ -70,6 +70,7 @@ export function GradientColorPicker({ onChange, value }: IGradientColorPicker) {
     onChange(gradientStyle.background);
   }, [gradientStyle.background]);
 
+
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (value) {

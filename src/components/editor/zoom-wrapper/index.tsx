@@ -1,3 +1,4 @@
+"use client";
 import { useState, type ComponentProps, type ReactNode } from "react";
 import { TransformWrapper, type ReactZoomPanPinchContentRef } from "react-zoom-pan-pinch";
 
@@ -11,8 +12,10 @@ export const ZoomWrapper = ({ children }: IZoomWrapper) => {
     <>
       <TransformWrapper
         initialScale={1}
+        minScale={0.5}
         doubleClick={{
-          mode: "reset",
+          mode: "toggle",
+          step: 0.0,
         }}
         panning={{
           disabled: true,

@@ -1,5 +1,5 @@
 import type { Config } from "tailwindcss";
-
+import { magicPanelPlugin } from 'magic-panel/plugin';
 const config: Config = {
   darkMode: ["class"],
   content: [
@@ -19,12 +19,12 @@ const config: Config = {
   			popover: {
   				DEFAULT: 'hsl(var(--popover))',
   				foreground: 'hsl(var(--popover-foreground))'
-  			},
-  			primary: {
-  				DEFAULT: 'hsl(var(--primary))',
-  				foreground: 'hsl(var(--primary-foreground))'
-  			},
-  			secondary: {
+  			},	
+  			primary: {	
+  				DEFAULT: 'hsl(var(--primary))',	
+  				foreground: 'hsl(var(--primary-foreground))'	
+  			},	
+  			secondary: {	
   				DEFAULT: 'hsl(var(--secondary))',
   				foreground: 'hsl(var(--secondary-foreground))'
   			},
@@ -68,6 +68,6 @@ const config: Config = {
   		}
   	}
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), magicPanelPlugin],
 };
 export default config;
