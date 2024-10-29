@@ -1,11 +1,15 @@
 import { DragableContainer } from "@/components/dragable-container";
 import { cn } from "@/lib/utils";
-import { useSlideControl } from "@/store/slide-control";
 import type { ISlideItems } from "@/types/slide-content";
 import { useController, useFormContext } from "react-hook-form";
-import "swiper/css";
-import { Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper/modules";
+import "swiper/css";
+import { useSlideControl } from "@/store/slide-control";
+import { useControls } from "react-zoom-pan-pinch";
+import { useEditorContext } from "@/providers/editor-provider";
+import { useBgControl } from "@/hooks/use-bg-control copy";
+import { useEffect } from "react";
 
 export const EditorSlideContent = () => {
   const { swipe } = useSlideControl();

@@ -3,7 +3,7 @@ import { useState, type ComponentProps, type ReactNode } from "react";
 import { TransformWrapper, type ReactZoomPanPinchContentRef } from "react-zoom-pan-pinch";
 
 export interface IZoomWrapper {
-  children: (ref: ReactZoomPanPinchContentRef, zoomLevel:number) => ReactNode;
+  children: (ref: ReactZoomPanPinchContentRef, zoomLevel: number) => ReactNode;
 }
 
 export const ZoomWrapper = ({ children }: IZoomWrapper) => {
@@ -13,6 +13,7 @@ export const ZoomWrapper = ({ children }: IZoomWrapper) => {
       <TransformWrapper
         initialScale={1}
         minScale={0.5}
+        centerOnInit
         doubleClick={{
           mode: "toggle",
           step: 0.0,

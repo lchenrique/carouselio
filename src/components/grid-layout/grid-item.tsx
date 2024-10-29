@@ -5,21 +5,13 @@ import { ContentEditable } from "../editor/content-editable";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
-export const GriiItem = ({
-  item,
-  index,
-  parentIndex,
-}: {
-  item: TextContent;
-  index: number;
-  parentIndex: number;
-}) => {
+export const GriiItem = ({ item, index, parentIndex }: { item: TextContent; index: number; parentIndex: number }) => {
   const isEditing = useContentControl((state) => state.isEditing);
   const activeItemId = useContentControl((state) => state.activeItemId);
   const setIsEditing = useContentControl((state) => state.setIsEditing);
   const [lastTap, setLastTap] = useState(0);
 
-  const id = `${parentIndex}-${index}`
+  const id = `${parentIndex}-${index}`;
 
   useEffect(() => {
     if (activeItemId !== id) {
@@ -27,18 +19,17 @@ export const GriiItem = ({
     }
   }, [activeItemId, id, setIsEditing]);
 
-
   const handleTap = () => {
-      const currentTime = Date.now();
-      const tapDelay = 300; // Tempo entre toques em milissegundos
+    const currentTime = Date.now();
+    const tapDelay = 300; // Tempo entre toques em milissegundos
 
-      if (currentTime - lastTap < tapDelay) {
-        if (id === activeItemId && !isEditing) setIsEditing(true);
-      }
+    if (currentTime - lastTap < tapDelay) {
+      if (id === activeItemId && !isEditing) setIsEditing(true);
+    }
 
-      setLastTap(currentTime);
+    setLastTap(currentTime);
   };
-  
+
   return (
     <div
       id={id}
@@ -53,12 +44,12 @@ export const GriiItem = ({
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
-      onDoubleClick={handleTap}
+      onDoubleClick={()=> {
+        if (id === activeItemId && !isEditing) setIsEditing(true);
+      }}
       onTouchStart={handleTap}
     >
-      {!item.type && id &&  (
-        <ContentEditable  index={index} parentIndex={parentIndex} />
-      )}
+      {!item.type && id && <ContentEditable index={index} parentIndex={parentIndex} />}
     </div>
   );
 };

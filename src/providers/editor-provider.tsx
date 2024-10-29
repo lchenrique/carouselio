@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import type { Editor } from "@tiptap/react"; // Importe o tipo Editor do Tiptap
 import { useContentControl } from "@/hooks/use-content-control";

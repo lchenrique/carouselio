@@ -10,7 +10,7 @@ import { fakeInitialData } from "./fake-initial-data";
 import { ZoomTransform } from "../zoom-wrapper/zoom-transform";
 import { SheetDemo } from "@/components/panel";
 import { EditoMenu, type EditoMenuHandles } from "../content-editable/menu";
-import { forwardRef } from "react";
+import { forwardRef, useRef } from "react";
 
 export const EditorSlider = forwardRef(
   (
@@ -23,11 +23,22 @@ export const EditorSlider = forwardRef(
         textColor: "#000",
       },
     });
-
+    const menuRef = useRef<EditoMenuHandles>();
+    const handleClickWindow = () => {
+      menuRef.current?.hideMenu();
+    };
     return (
       <FormProvider {...form}>
         <ZoomTransform>
-          <EditorSlideContent />
+          {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+              handleClickWindow();
+            }}
+          >
+            <EditorSlideContent />
+          </div>
         </ZoomTransform>
       </FormProvider>
     );

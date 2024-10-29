@@ -5,6 +5,7 @@ import { ZoomWrapper } from "@/components/editor/zoom-wrapper";
 import { ZoomTransform } from "@/components/editor/zoom-wrapper/zoom-transform";
 import { SheetDemo } from "@/components/panel";
 import { Button, SidebarTrigger } from "@/components/ui";
+import { Card } from "@/components/ui/card";
 import { useSidebar } from "@/components/ui/sidebar";
 import { useClickOutside } from "@/hooks/use-click-outside";
 import { useContentControl } from "@/hooks/use-content-control";
@@ -15,13 +16,15 @@ import { memo, useRef } from "react";
 const Editor = memo(() => {
   const setActiveItemId = useContentControl((state) => state.setActiveItemId);
   const setIsEditing = useContentControl((state) => state.setIsEditing);
+  const { isMobile, open } = useSidebar();
 
   const menuRef = useRef<EditoMenuHandles>();
-  const ref = useClickOutside(() => {
+
+  const handleClickBehind = () => {
     menuRef.current?.hideMenu();
     setActiveItemId(null);
     setIsEditing(false);
-  });
+  };
 
   return (
     <>
@@ -30,12 +33,23 @@ const Editor = memo(() => {
           {(_, scale) => {
             return (
               <>
-                <div className="h-screen w-full flex items-center overflow-hidden relative ">
-                  <div ref={ref as React.RefObject<HTMLDivElement>} className="w-[400] mx-auto ">
-                    <EditoMenu ref={menuRef as React.RefObject<EditoMenuHandles>} />
-                    <SheetDemo />
-
-                    <EditorSlider ref={menuRef as React.RefObject<EditoMenuHandles>} scale={scale} />
+                <div
+                  className={cn("h-[calc(100vh-40px)] w-screen relative ", {
+                    "w-[calc(100vw-256px)] ml-auto": !isMobile && open,
+                  })}
+                >
+                  {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+                  <div className="w-full border h-full overflow-hidden " onClick={handleClickBehind}>
+                    {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+                    <div
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                    >
+                      <SheetDemo />
+                      <EditoMenu ref={menuRef as React.RefObject<EditoMenuHandles>} />
+                    </div>
+                    <EditorSlider scale={scale} />
                   </div>
                 </div>
               </>
