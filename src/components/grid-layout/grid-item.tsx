@@ -3,7 +3,7 @@ import { useContentControl } from "@/hooks/use-content-control";
 import type { ContentValuesImage, TextContent } from "@/types/text-content";
 import { ContentEditable } from "../editor/content-editable";
 import { cn } from "@/lib/utils";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export const GriiItem = ({
   item,
@@ -17,6 +17,7 @@ export const GriiItem = ({
   const isEditing = useContentControl((state) => state.isEditing);
   const activeItemId = useContentControl((state) => state.activeItemId);
   const setIsEditing = useContentControl((state) => state.setIsEditing);
+  const [lastTap, setLastTap] = useState(0);
 
   const id = `${parentIndex}-${index}`
 
@@ -25,6 +26,18 @@ export const GriiItem = ({
       setIsEditing(false);
     }
   }, [activeItemId, id, setIsEditing]);
+
+
+  const handleTap = () => {
+      const currentTime = Date.now();
+      const tapDelay = 300; // Tempo entre toques em milissegundos
+
+      if (currentTime - lastTap < tapDelay) {
+        if (id === activeItemId && !isEditing) setIsEditing(true);
+      }
+
+      setLastTap(currentTime);
+  };
   
   return (
     <div
@@ -40,9 +53,8 @@ export const GriiItem = ({
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
-      onDoubleClick={() => {
-        if (id === activeItemId && !isEditing) setIsEditing(true);
-      }}
+      onDoubleClick={handleTap}
+      onTouchStart={handleTap}
     >
       {!item.type && id &&  (
         <ContentEditable  index={index} parentIndex={parentIndex} />

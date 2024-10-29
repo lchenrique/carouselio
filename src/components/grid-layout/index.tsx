@@ -92,6 +92,9 @@ const GridLayout = <T,>({ items, parentIndex, allowOverlap }: IGridLayoutProps<T
                 },
                 isDraggingClass
               )}
+              onTouchStart={() => {
+                handleSelect(id);
+              }}
               onClick={() => {
                 handleSelect(id);
               }}
